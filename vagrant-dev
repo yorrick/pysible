@@ -45,8 +45,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         end
 
         dev.vm.provision "ansible" do |ansible|
-            ansible.playbook = "ansible/provision.yml"
-            ansible.inventory_path = "ansible/inventories/dev_servers"
+            ansible.playbook = "provision.yml"
+            ansible.inventory_path = "inventories/dev_servers"
             ansible.limit = 'all'
             ansible.verbose = 'vv'
         end

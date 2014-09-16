@@ -6,10 +6,22 @@ Ansible configuration to run multistage python applications
 
 ## Run it with vagrant
 
-Initial setup
 
+### Environements
+
+You can change the environement that is run in vagrant with VAGRANT_VAGRANTFILE:
 ```
 export VAGRANT_VAGRANTFILE=vagrant-int
+```
+
+You can control which apps are run on a VM by using PYANSIBLE_APPS
+```
+export PYANSIBLE_APPS=/Users/yorrick/work/django_async
+```
+
+
+Initial setup
+```
 vagrant up
 ```
 

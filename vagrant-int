@@ -21,11 +21,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         int.vm.network :private_network, ip: "192.168.56.121"
         # int.ssh.forward_agent = true
 
-        # Share an additional folder to the guest VM. The first argument is
-        # the path on the host to the actual folder. The second argument is
-        # the path on the guest to mount the folder. And the optional third
-        # argument is a set of non-required options.
-        int.vm.synced_folder ".", "/srv/app/django_async", :owner=> 'webapp', :group=>'webapp', :mount_options => ['dmode=777', 'fmode=777']
+        if ENV.has_key?('PYANSIBLE_APPS')
+            apps = ENV['PYANSIBLE_APPS'].split(',').to_set
+            apps.each do |host_app_path|
+                app_name = host_app_path.split("/").last
+                # int.vm.synced_folder host_app_path, "/srv/app/#{app_name}", :owner=> 'webapp', :group=>'webapp', :mount_options => ['dmode=777', 'fmode=777']
+                int.vm.synced_folder host_app_path, "/srv/app/#{app_name}", :mount_options => ['dmode=777', 'fmode=777']
+            end
+        end
 
         # Provider-specific configuration so you can fine-tune various
         # backing providers for Vagrant. These expose provider-specific options.
@@ -45,8 +48,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         end
 
         int.vm.provision "ansible" do |ansible|
-            ansible.playbook = "ansible/provision.yml"
-            ansible.inventory_path = "ansible/inventories/integration_servers"
+            ansible.playbook = "provision.yml"
+            ansible.inventory_path = "inventories/integration_servers"
             ansible.limit = 'all'
             ansible.verbose = 'vvv'
         end
