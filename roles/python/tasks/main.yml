@@ -1,0 +1,30 @@
+---
+- name: Create python directory
+  sudo: yes
+  file: path={{ python_dir }} owner=root group=root mode=0755 state=directory
+
+- name: Get python
+  shell: "wget {{ python_source }} && tar zxvf Python-{{ python_version }}.tgz && cd Python-{{ python_version }}"
+  args:
+    chdir: "{{ python_dir }}"
+    creates: "{{ python_dir }}/Python-{{ python_version }}"
+
+- name: Install python
+  shell: "./configure --prefix={{ python_dir }}/python{{ python_version }} && make && make install"
+  args:
+    chdir: "{{ python_dir }}/Python-{{ python_version }}"
+    creates: "{{ python_dir }}/python{{ python_version }}"
+
+- name: Download pip installation script
+  copy: src=get-pip.py dest={{ python_dir }}
+
+- name: Install pip
+  command: "{{ python_dir }}/python{{ python_version }}/bin/python get-pip.py"
+  args:
+    chdir: "{{ python_dir }}"
+    creates: "{{ python_dir }}/python{{ python_version }}/bin/pip"
+
+- name: Install virtualenv
+  command: "{{ python_dir }}/python{{ python_version }}/bin/pip install virtualenv==1.11.6"
+  args:
+    creates: "{{ python_dir }}/python{{ python_version }}/lib/python{{ python_major_version }}/site-packages/virtualenv.py"

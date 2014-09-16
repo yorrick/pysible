@@ -1,0 +1,3 @@
+---
+app_dir: /app
+python_requirements: requirements-prod.txt

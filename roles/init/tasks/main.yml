@@ -1,0 +1,22 @@
+---
+- name: Update apt
+  sudo: yes
+  apt: update_cache=yes
+
+- name: Install System Packages
+  sudo: yes
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - curl
+    - wget
+    - python-software-properties
+    - acl
+    - libpq-dev  # this is used by psycopg2
+    - make
+    - libpcre3
+    - libpcre3-dev
+
+- name: Update apt
+  sudo: yes
+  apt: update_cache=yes
+

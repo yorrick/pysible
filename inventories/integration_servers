@@ -1,0 +1,20 @@
+# inventory to run integration environment on local machine with vagrant
+[database]
+192.168.56.121
+
+[app-server]
+192.168.56.121
+
+[build-server]
+192.168.56.121
+
+[integration:children]
+database
+app-server
+build-server
+
+
+# overrides default config, to be able to build integration server locally with ansible
+[integration:vars]
+ansible_ssh_user=vagrant
+ansible_ssh_port=22

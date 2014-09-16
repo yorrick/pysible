@@ -1,0 +1,10 @@
+[app-server]
+4.2.2.1
+4.2.2.2
+
+[database]
+8.8.8.8
+
+[production:children]
+app-server
+database

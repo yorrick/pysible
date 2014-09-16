@@ -1,0 +1,17 @@
+---
+- name: Create app directory
+  sudo: yes
+  file: path={{ app_dir }} owner=root group=root mode=0755 state=directory
+
+- name: Create app virtualenv directory
+  sudo: yes
+  file: path={{ venv_dir }} owner=root group=root mode=0755 state=directory
+
+- name: Create virtualenvs for apps
+  shell: "{{ python_dir }}/python{{ python_version }}/bin/virtualenv --python={{ python_dir }}/python{{ python_version }}/bin/python --no-site-packages --distribute {{ item }} && {{ item }}/bin/pip install -r {{ app_dir }}/{{ item }}/{{ python_requirements }}"
+  args:
+    chdir: "{{ venv_dir }}"
+    creates: "{{ item }}"
+  with_items:
+    - "{{ app_names }}"
+

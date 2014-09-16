@@ -1,0 +1,9 @@
+# put the default config here
+---
+python_major_version: 2.7
+python_version: "{{ python_major_version }}.8"
+python_source: "https://www.python.org/ftp/python/{{ python_version }}/Python-{{ python_version }}.tgz"
+python_dir: /srv/pythons
+app_dir: /srv/app
+venv_dir: /srv/virtualenv
+app_names: [ "django_async" ]
