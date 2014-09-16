@@ -1,15 +1,11 @@
 ---
 
-- name: Copy uwsgi config file
-  command: cp {{ item }}/configs/uwsgi.ini /etc/uwsgi/vassals/{{ item }}.uwsgi.ini
-  args:
-    chdir: "{{ app_dir }}"
+- name: Symlink uwsgi config file
+  file: src={{ app_dir }}/{{ item }}/configs/uwsgi.ini dest=/etc/uwsgi/vassals/{{ item }}.uwsgi.ini state=link
   with_items:
     - "{{ app_names }}"
 
-- name: Copy nginx config file
-  command: cp {{ item }}/configs/nginx.conf /etc/nginx/sites-enabled/{{ item }}.nginx.conf
-  args:
-    chdir: "{{ app_dir }}"
+- name: Symlink nginx config file
+  file: src={{ app_dir }}/{{ item }}/configs/nginx.conf dest=/etc/nginx/sites-enabled/{{ item }}.nginx.conf state=link
   with_items:
     - "{{ app_names }}"

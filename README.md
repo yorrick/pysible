@@ -32,3 +32,7 @@ vagrant halt && vagrant destroy -f && vagrant up
 ```
 
 
+Test deployement
+```
+curl -H 'Host: django-async.local' localhost:8000
+```

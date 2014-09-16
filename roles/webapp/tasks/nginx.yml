@@ -6,16 +6,28 @@
 - name: Override nginx config
   template: src=nginx.conf dest=/etc/nginx/nginx.conf owner=root group=root mode=0644
 
-- name: Create nginx pid directory
-  file: path=/var/run/nginx owner=webapp group=webapp mode=0764 state=directory
+- name: Install nginx uwsgi config file
+  copy: src=uwsgi_params dest=/etc/nginx/uwsgi_params owner=root group=root mode=0644
+
+#- name: Create nginx pid directory
+#  file: path=/var/run/nginx owner=webapp group=webapp mode=0764 state=directory
 
 - name: Create nginx log directory
   file: path=/var/log/nginx owner=webapp group=webapp mode=0764 state=directory
 
+- name: Create nginx default site directory
+  file: path=/etc/nginx/default owner=webapp group=webapp mode=0764 state=directory
+
+- name: Add default site index.html file
+  copy: src=index.html dest=/etc/nginx/default/index.html owner=webapp group=webapp mode=0644
+
+- name: Add default site nginx config file
+  copy: src=default.nginx.conf dest=/etc/nginx/default/default.nginx.conf owner=webapp group=webapp mode=0644
+
+- name: Install nginx default site
+  file: src=/etc/nginx/default/default.nginx.conf dest=/etc/nginx/sites-enabled/default.nginx.conf state=link
+#  copy: src=default_web_site.conf dest=/etc/nginx/sites-available/default owner=webapp group=webapp mode=0644
+
 - name: Install nginx upstart configuration file
   template: src=upstart-nginx.conf dest=/etc/init/nginx.conf owner=root group=root mode=0644
 
-#- name: Change default nginx site
-#  sudo: yes
-#  template: src=default.tpl dest=/etc/nginx/sites-available/default
-#  notify: restart nginx
