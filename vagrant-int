@@ -23,19 +23,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         int.vm.network :private_network, ip: "192.168.56.121"
         # int.ssh.forward_agent = true
 
-        sync_folders(int.vm)
-
-        # Provider-specific configuration so you can fine-tune various
-        # backing providers for Vagrant. These expose provider-specific options.
-        # Example for VirtualBox:
-        #
-        # int.vm.provider "virtualbox" do |vb|
-        #   # Don't boot with headless mode
-        #   vb.gui = true
-        #
-        #   # Use VBoxManage to customize the VM. For example to change memory:
-        #   vb.customize ["modifyvm", :id, "--memory", "1024"]
-        # end
+        apps = get_host_apps()
+        apps.each do |app_name, host_app_path|
+            # int.vm.synced_folder host_app_path, "/srv/app/#{app_name}", :owner=> 'webapp', :group=>'webapp', :mount_options => ['dmode=777', 'fmode=777']
+            int.vm.synced_folder host_app_path, "/srv/app/#{app_name}", :mount_options => ['dmode=777', 'fmode=777']
+        end
 
         # set name of VM
         int.vm.provider "virtualbox" do |v|
@@ -46,7 +38,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             ansible.playbook = "provision.yml"
             ansible.inventory_path = "inventories/integration_servers"
             ansible.limit = 'all'
-            ansible.verbose = 'vvv'
+            ansible.verbose = 'vv'
+            ansible.extra_vars = {app_names: apps.keys}
+            #ansible.skip_tags =
         end
 
         # int.vm.hostname = "www.testing.de"

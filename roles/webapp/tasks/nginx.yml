@@ -1,0 +1,21 @@
+---
+- name: Install Nginx
+  sudo: yes
+  apt: pkg=nginx=1.1.19-1ubuntu0.6 state=present
+
+- name: Override nginx config
+  template: src=nginx.conf dest=/etc/nginx/nginx.conf owner=root group=root mode=0644
+
+- name: Create nginx pid directory
+  file: path=/var/run/nginx owner=webapp group=webapp mode=0764 state=directory
+
+- name: Create nginx log directory
+  file: path=/var/log/nginx owner=webapp group=webapp mode=0764 state=directory
+
+- name: Install nginx upstart configuration file
+  template: src=upstart-nginx.conf dest=/etc/init/nginx.conf owner=root group=root mode=0644
+
+#- name: Change default nginx site
+#  sudo: yes
+#  template: src=default.tpl dest=/etc/nginx/sites-available/default
+#  notify: restart nginx

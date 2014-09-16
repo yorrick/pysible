@@ -1,0 +1,15 @@
+---
+
+- name: Copy uwsgi config file
+  command: cp {{ item }}/configs/uwsgi.ini /etc/uwsgi/vassals/{{ item }}.uwsgi.ini
+  args:
+    chdir: "{{ app_dir }}"
+  with_items:
+    - "{{ app_names }}"
+
+- name: Copy nginx config file
+  command: cp {{ item }}/configs/nginx.conf /etc/nginx/sites-enabled/{{ item }}.nginx.conf
+  args:
+    chdir: "{{ app_dir }}"
+  with_items:
+    - "{{ app_names }}"

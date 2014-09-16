@@ -1,27 +1,7 @@
 ---
 
-- name: Create webapp user
-  user: name=webapp comment="webapp user" createhome=yes shell=/bin/bash
+- include: uwsgi.yml
+  tags: [uwsgi]
 
-- name: Create webapp pid directory
-  file: path=/var/run/webapp owner=webapp group=webapp mode=0764 state=directory
-
-- name: Install uwsgi
-  command: "{{ python_dir }}/python{{ python_version }}/bin/pip install uWSGI==2.0.7"
-  args:
-    creates: "{{ python_dir }}/python{{ python_version }}/lib/python{{ python_major_version }}/site-packages/uwsgidecorators.py"
-
-- name: Create uwsgi etc directory
-  file: path=/etc/uwsgi owner=root group=root mode=0755 state=directory
-
-- name: Create uwsgi pid directory
-  file: path=/var/run/uwsgi owner=webapp group=webapp mode=0764 state=directory
-
-- name: Create uwsgi log directory
-  file: path=/var/log/uwsgi owner=webapp group=webapp mode=0764 state=directory
-
-- name: Installs uwsgi emperor configuration file
-  template: src=uwsgi_emperor.ini dest=/etc/uwsgi/uwsgi_emperor.ini owner=root group=root mode=0644
-
-- name: Installs uwsgi upstart configuration file
-  template: src=uwsgi_emperor.conf dest=/etc/init/uwsgi_emperor.conf owner=root group=root mode=0644
+- include: nginx.yml
+  tags: [nginx]

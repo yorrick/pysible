@@ -1,15 +1,14 @@
 - hosts: app-server
   sudo: true
   roles:
-    - { role: init, tags: [ 'init' ] }
-    - { role: nginx, tags: [ 'nginx' ] }
+    - init
     - webapp
-
+    - { role: deploy, tags: [ 'deploy' ] }
 
 - hosts: database
   sudo: true
   roles:
-    - { role: init, tags: [ 'init' ] }
+    - init
     - {
         role: ANXS.postgresql,
         postgresql_version: '9.3',
@@ -30,5 +29,5 @@
 - hosts: python-dev
   sudo: true
   roles:
-    - { role: init, tags: [ 'init' ] }
+    - init
     - python-env
