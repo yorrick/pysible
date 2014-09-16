@@ -1,8 +1,10 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+require_relative 'vagrant/utils.rb'
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
+
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
@@ -21,14 +23,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         int.vm.network :private_network, ip: "192.168.56.121"
         # int.ssh.forward_agent = true
 
-        if ENV.has_key?('PYANSIBLE_APPS')
-            apps = ENV['PYANSIBLE_APPS'].split(',').to_set
-            apps.each do |host_app_path|
-                app_name = host_app_path.split("/").last
-                # int.vm.synced_folder host_app_path, "/srv/app/#{app_name}", :owner=> 'webapp', :group=>'webapp', :mount_options => ['dmode=777', 'fmode=777']
-                int.vm.synced_folder host_app_path, "/srv/app/#{app_name}", :mount_options => ['dmode=777', 'fmode=777']
-            end
-        end
+        sync_folders(int.vm)
 
         # Provider-specific configuration so you can fine-tune various
         # backing providers for Vagrant. These expose provider-specific options.
