@@ -34,6 +34,20 @@ vagrant halt && vagrant destroy -f && vagrant up
 
 ## Development
 
+
+### Benefits
+1. Dev env is as close as possible as the production env
+2. Can easily distribute copies of dev env, it takes no time to setup a new dev machine, or to update the dev envs.
+3. No more problems installing python packages on windows, evrything is the same whatever the os you use on your dev machine
+4. You do not polute your host machine with a lot a dependencies
+
+### Drawbacks
+1. One person has to maintain the env
+2. Run a VM on your dev machine: it takes memory
+3. You have to be a bit comfortable using the shell
+4. You have to install ansible on your dev machine, which is not blazing fast on windows hosts (or we could just distribute prebuilt vagrant images)
+
+
 ### Restore database
 
 Using vagrant user
@@ -59,6 +73,10 @@ source /srv/virtualenv/django_async/bin/activate
 Application is now accessible at http://localhost:8000 from the host!
 
 You can configure your editor on your machine and edit the files, app will be reloaded automatically, as if you were working on local machine.
+
+
+NB: to use an editor that uses the project's virtualenv, see if your editor supports remote virtualenvs (like pycharm)
+
 
 
 ## Integration

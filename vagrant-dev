@@ -28,6 +28,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           dev.vm.synced_folder host_app_path, "/srv/app/#{app_name}", :mount_options => ['dmode=777', 'fmode=777']
         end
 
+        # mount virtualenv directory on host
+        dev.vm.synced_folder "/Users/yorrick/work/pyansible-virtualenvs", "/srv/virtualenv", create: true
+
         # set name of VM
         dev.vm.provider "virtualbox" do |v|
           v.name = "django_async_dev"
