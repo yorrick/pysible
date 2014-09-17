@@ -20,10 +20,22 @@ export PYANSIBLE_APPS=/Users/yorrick/work/django_async
 ```
 
 
-Initial setup
+#### Package a pre built vagrant box
 ```
-vagrant up
+vagrant package --vagrantfile vagrant-dev --include vagrant
 ```
+
+
+
+#### Initial setup
+```
+vagrant box add ~/work/pyansible/package.box --name dev-box  # add box to vagrant available boxes
+vagrant init dev-box  # creates a Vagrantfile that is used to configure vagrant
+vagrant up  # boot the VM
+```
+
+Note: Since there are no file sharing yet when the box is installed, you still have to add shares in Vagrantfile, and to provision the VM again
+
 
 Rebuild everything
 
@@ -38,7 +50,7 @@ vagrant halt && vagrant destroy -f && vagrant up
 ### Benefits
 1. Dev env is as close as possible as the production env
 2. Can easily distribute copies of dev env, it takes no time to setup a new dev machine, or to update the dev envs.
-3. No more problems installing python packages on windows, evrything is the same whatever the os you use on your dev machine
+3. No more problems installing python & python packages on windows, everything is the same whatever the os you use on your dev machine
 4. You do not polute your host machine with a lot a dependencies
 
 ### Drawbacks
