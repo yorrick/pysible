@@ -18,9 +18,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         int.vm.box_url = "http://files.vagrantup.com/precise32.box"
         # int.vm.box_url = "https://f0fff3908f081cb6461b407be80daf97f07ac418.googledrive.com/host/0BwtuV7VyVTSkUG1PM3pCeDJ4dVE/centos7.box"
 
-        # we add 10000 to integration ports
-        int.vm.network "forwarded_port", guest: 5432, host: 15432
-        int.vm.network "forwarded_port", guest: 80, host: 18000
+        int.vm.network "forwarded_port", guest: 5432, host: 5432
+        int.vm.network "forwarded_port", guest: 80, host: 8000
         int.vm.network :private_network, ip: "192.168.56.121"
         # int.ssh.forward_agent = true
 

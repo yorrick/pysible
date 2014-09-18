@@ -44,3 +44,11 @@
   copy: src=etc.init.d.buildmaster dest=/etc/init.d/buildmaster mode=0755
   notify:
     - restart buildbot master
+
+- name: Copy buildbot master nginx config
+  copy: src=nginx.conf dest={{ app_dir }}/buildbot/nginx.conf owner=buildbot group=buildbot mode=0644
+
+- name: Symlink buildbot master nginx config file
+  file: src={{ app_dir }}/buildbot/nginx.conf dest=/etc/nginx/sites-enabled/buildbot.nginx.conf state=link
+  notify:
+    - restart nginx

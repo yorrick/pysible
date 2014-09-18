@@ -4,8 +4,12 @@
   file: src={{ app_dir }}/{{ item }}/configs/uwsgi.ini dest=/etc/uwsgi/vassals/{{ item }}.uwsgi.ini state=link
   with_items:
     - "{{ app_names }}"
+  notify:
+    - restart uwsgi_emperor
 
 - name: Symlink nginx config file
   file: src={{ app_dir }}/{{ item }}/configs/nginx.conf dest=/etc/nginx/sites-enabled/{{ item }}.nginx.conf state=link
   with_items:
     - "{{ app_names }}"
+  notify:
+    - restart nginx
