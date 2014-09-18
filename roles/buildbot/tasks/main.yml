@@ -5,6 +5,7 @@
   apt: pkg={{ item.key }} state={{ item.value }}
   with_dict:
     sqlite3: latest
+    libsqlite3-dev: latest
     libbz2-dev: latest
 
 - name: Create buildbot user
@@ -29,3 +30,14 @@
   when: result|failed
   args:
     chdir: "{{ venv_dir }}"
+
+- name: Create buildbot master base directory
+  file: path={{ buildbot_master_dir }} owner=buildbot group=buildbot mode=0755 state=directory
+
+- name: Initialize master
+  command: "{{ venv_dir }}/buildbot/bin/buildbot create-master -r {{ buildbot_master_dir }}"
+  args:
+    creates: "{{ buildbot_master_dir }}/state.sqlite"
+
+
+
