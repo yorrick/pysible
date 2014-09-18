@@ -6,6 +6,7 @@
   with_dict:
     sqlite3: latest
     libsqlite3-dev: latest
+    git: latest
 
 - name: Create buildbot virtualenv
   pip:

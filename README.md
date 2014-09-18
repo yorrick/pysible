@@ -113,6 +113,6 @@ curl -H 'Host: django-async.local' localhost:18000/en/
 See [this doc](http://docs.buildbot.net/0.8.4p2/Change-Hooks.html) for more details.
 
 ```
-curl http://buildbot.local:8000/change_hook/github
+curl -v --data-urlencode payload@tests/github-push-notification.json http://buildbot.local:8000/change_hook/github
 ```
 
