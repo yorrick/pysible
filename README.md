@@ -80,7 +80,7 @@ sudo su postgres -c 'psql -f /vagrant/dbdump postgres'
 vagrant ssh
 cd /srv/app/django_async/
 source /srv/virtualenv/django_async/bin/activate
-./manage.py runserver 0.0.0.0:8000 --settings=django_async.settings_dev
+python manage.py runserver 0.0.0.0:8000 --settings=django_async.settings_dev
 ```
 
 Application is now accessible at http://localhost:8000 from the host!

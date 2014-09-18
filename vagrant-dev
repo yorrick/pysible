@@ -24,8 +24,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
         apps = get_host_apps()
         apps.each do |app_name, host_app_path|
-          # dev.vm.synced_folder host_app_path, "/srv/app/#{app_name}", :owner=> 'webapp', :group=>'webapp', :mount_options => ['dmode=777', 'fmode=777']
-          dev.vm.synced_folder host_app_path, "/srv/app/#{app_name}", :mount_options => ['dmode=777', 'fmode=777']
+          # dev.vm.synced_folder host_app_path, "/srv/app/#{app_name}", :owner=> 'webapp', :group=>'webapp', :mount_options => ['dmode=755', 'fmode=666']
+          dev.vm.synced_folder host_app_path, "/srv/app/#{app_name}", :mount_options => ['dmode=755', 'fmode=666']
         end
 
         # set name of VM

@@ -2,4 +2,3 @@
 python_requirements: requirements-prod.txt
 ansible_ssh_user: ansible
 ansible_ssh_port: 22
-buildbot_master_dir: /srv/buildbot-master

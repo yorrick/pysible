@@ -11,11 +11,14 @@
 - name: Create buildbot user
   user: name=buildbot comment="buildbot user" createhome=yes shell=/bin/bash
 
-- name: Create build app dir
+- name: Create buildbot slave user
+  user: name=buildbot-slave comment="buildbot slave user" createhome=yes shell=/bin/bash
+
+- name: Create buildbot app dir
   file: path={{ app_dir }}/buildbot owner=buildbot group=buildbot mode=0755 state=directory
 
 - name: Copy build master requirements
-  copy: src=requirements-master.txt dest={{ app_dir }}/buildbot/requirements-master.txt
+  copy: src=requirements-master.txt dest={{ app_dir }}/buildbot/requirements-master.txt owner=buildbot group=buildbot mode=0644
 
 - name: Create buildbot virtualenv
   shell: "{{ python_dir }}/python{{ python_version }}/bin/virtualenv --python={{ python_dir }}/python{{ python_version }}/bin/python --no-site-packages --distribute buildbot && buildbot/bin/pip install -r {{ app_dir }}/buildbot/requirements-master.txt"
@@ -31,13 +34,13 @@
   args:
     chdir: "{{ venv_dir }}"
 
-- name: Create buildbot master base directory
-  file: path={{ buildbot_master_dir }} owner=buildbot group=buildbot mode=0755 state=directory
-
 - name: Initialize master
-  command: "{{ venv_dir }}/buildbot/bin/buildbot create-master -r {{ buildbot_master_dir }}"
+  sudo: yes
+  sudo_user: buildbot
+  command: "{{ venv_dir }}/buildbot/bin/buildbot create-master -r {{ app_dir }}/buildbot"
   args:
-    creates: "{{ buildbot_master_dir }}/state.sqlite"
+    creates: "{{ app_dir }}/buildbot/state.sqlite"
 
-
+- name: Copy master configuration file
+  copy: src=master.cfg dest={{ app_dir }}/buildbot/master.cfg owner=buildbot group=buildbot mode=0644
 
