@@ -106,3 +106,13 @@ Test deployment
 curl localhost:18000
 curl -H 'Host: django-async.local' localhost:18000/en/
 ```
+
+
+### Test buildbot github hook
+
+See [this doc](http://docs.buildbot.net/0.8.4p2/Change-Hooks.html) for more details.
+
+```
+curl http://buildbot.local:8000/change_hook/github
+```
+
