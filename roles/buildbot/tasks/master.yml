@@ -1,0 +1,35 @@
+---
+
+- name: Create buildbot master user
+  user: name=buildbot comment="buildbot user" createhome=yes shell=/bin/bash
+
+- name: Create buildbot master app dir
+  file: path={{ app_dir }}/buildbot owner=buildbot group=buildbot mode=0755 state=directory
+
+- name: Initialize master
+  sudo: yes
+  sudo_user: buildbot
+  command: "{{ venv_dir }}/buildbot/bin/buildbot create-master -r {{ app_dir }}/buildbot"
+  args:
+    creates: "{{ app_dir }}/buildbot/buildbot.tac"
+
+- name: Copy master configuration file
+  copy: src=master.cfg dest={{ app_dir }}/buildbot/master.cfg owner=buildbot group=buildbot mode=0644
+  notify:
+    - restart buildbot master
+
+- name: Install master config
+  template: src=etc.default.buildmaster dest=/etc/default/buildmaster
+
+- name: Install system 5 master init script
+  copy: src=etc.init.d.buildmaster dest=/etc/init.d/buildmaster mode=0755
+  notify:
+    - restart buildbot master
+
+- name: Copy buildbot master nginx config
+  copy: src=nginx.conf dest={{ app_dir }}/buildbot/nginx.conf owner=buildbot group=buildbot mode=0644
+
+- name: Symlink buildbot master nginx config file
+  file: src={{ app_dir }}/buildbot/nginx.conf dest=/etc/nginx/sites-enabled/buildbot.nginx.conf state=link
+  notify:
+    - restart nginx

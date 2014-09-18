@@ -1,0 +1,22 @@
+---
+
+- name: Create buildbot slave user
+  user: name=buildbot-slave comment="buildbot slave user" createhome=yes shell=/bin/bash
+
+- name: Create buildbot slave app dir
+  file: path={{ app_dir }}/buildbot-slave owner=buildbot-slave group=buildbot-slave mode=0755 state=directory
+
+- name: Initialize slave
+  sudo: yes
+  sudo_user: buildbot-slave
+  command: "{{ venv_dir }}/buildbot/bin/buildslave create-slave {{ app_dir }}/buildbot-slave localhost:19989 django_async django_async_password"
+  args:
+    creates: "{{ app_dir }}/buildbot-slave/buildbot.tac"
+
+- name: Install slave config
+  template: src=etc.default.buildslave dest=/etc/default/buildslave
+
+- name: Install system 5 master init script
+  copy: src=etc.init.d.buildslave dest=/etc/init.d/buildslave mode=0755
+  notify:
+    - restart buildbot slave

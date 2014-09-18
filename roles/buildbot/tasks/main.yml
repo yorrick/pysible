@@ -6,49 +6,28 @@
   with_dict:
     sqlite3: latest
     libsqlite3-dev: latest
-    libbz2-dev: latest
-
-- name: Create buildbot user
-  user: name=buildbot comment="buildbot user" createhome=yes shell=/bin/bash
-
-- name: Create buildbot slave user
-  user: name=buildbot-slave comment="buildbot slave user" createhome=yes shell=/bin/bash
-
-- name: Create buildbot app dir
-  file: path={{ app_dir }}/buildbot owner=buildbot group=buildbot mode=0755 state=directory
-
-- name: Copy build master requirements
-  copy: src=requirements-master.txt dest={{ app_dir }}/buildbot/requirements-master.txt owner=buildbot group=buildbot mode=0644
 
 - name: Create buildbot virtualenv
   pip:
+    name: "{{ item.key }}"
+    version: "{{ item.value }}"
     virtualenv_command: "{{ python_dir }}/python{{ python_version }}/bin/virtualenv"
     virtualenv_site_packages: no
     virtualenv: "{{ venv_dir }}/buildbot"
-    requirements: "{{ app_dir }}/buildbot/requirements-master.txt"
+  with_dict:
+    Jinja2: 2.7.3
+    MarkupSafe: 0.23
+    SQLAlchemy: 0.7.10
+    Tempita: 0.5.2
+    Twisted: 14.0.1
+    buildbot: 0.8.9
+    buildbot-slave: 0.8.9
+    decorator: 3.4.0
+    pysqlite: 2.6.3
+    python-dateutil: 1.5
+    sqlalchemy-migrate: 0.7.2
+    wsgiref: 0.1.2
+    zope.interface: 4.1.1
 
-- name: Initialize master
-  sudo: yes
-  sudo_user: buildbot
-  command: "{{ venv_dir }}/buildbot/bin/buildbot create-master -r {{ app_dir }}/buildbot"
-  args:
-    creates: "{{ app_dir }}/buildbot/state.sqlite"
-
-- name: Copy master configuration file
-  copy: src=master.cfg dest={{ app_dir }}/buildbot/master.cfg owner=buildbot group=buildbot mode=0644
-
-- name: Install master config
-  template: src=etc.default.buildmaster dest=/etc/default/buildmaster
-
-- name: Install system 5 master init script
-  copy: src=etc.init.d.buildmaster dest=/etc/init.d/buildmaster mode=0755
-  notify:
-    - restart buildbot master
-
-- name: Copy buildbot master nginx config
-  copy: src=nginx.conf dest={{ app_dir }}/buildbot/nginx.conf owner=buildbot group=buildbot mode=0644
-
-- name: Symlink buildbot master nginx config file
-  file: src={{ app_dir }}/buildbot/nginx.conf dest=/etc/nginx/sites-enabled/buildbot.nginx.conf state=link
-  notify:
-    - restart nginx
+- include: master.yml
+- include: slave.yml

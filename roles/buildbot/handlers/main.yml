@@ -1,3 +1,6 @@
 ---
 - name: restart buildbot master
   service: name=buildmaster enabled=yes state=restarted
+
+- name: restart buildbot slave
+  service: name=buildslave enabled=yes state=restarted
