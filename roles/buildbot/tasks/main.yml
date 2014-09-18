@@ -21,18 +21,11 @@
   copy: src=requirements-master.txt dest={{ app_dir }}/buildbot/requirements-master.txt owner=buildbot group=buildbot mode=0644
 
 - name: Create buildbot virtualenv
-  shell: "{{ python_dir }}/python{{ python_version }}/bin/virtualenv --python={{ python_dir }}/python{{ python_version }}/bin/python --no-site-packages --distribute buildbot && buildbot/bin/pip install -r {{ app_dir }}/buildbot/requirements-master.txt"
-  register: result
-  ignore_errors: True
-  args:
-    chdir: "{{ venv_dir }}"
-    creates: "buildbot"
-
-- name: Remove failed buildbot virtualenv
-  command: rm -rf buildbot
-  when: result|failed
-  args:
-    chdir: "{{ venv_dir }}"
+  pip:
+    virtualenv_command: "{{ python_dir }}/python{{ python_version }}/bin/virtualenv"
+    virtualenv_site_packages: no
+    virtualenv: "{{ venv_dir }}/buildbot"
+    requirements: "{{ app_dir }}/buildbot/requirements-master.txt"
 
 - name: Initialize master
   sudo: yes

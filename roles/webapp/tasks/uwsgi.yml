@@ -1,9 +1,7 @@
 ---
 
 - name: Install uwsgi
-  command: "{{ python_dir }}/python{{ python_version }}/bin/pip install uWSGI==2.0.7"
-  args:
-    creates: "{{ python_dir }}/python{{ python_version }}/lib/python{{ python_major_version }}/site-packages/uwsgidecorators.py"
+  pip: executable={{ python_dir }}/python{{ python_version }}/bin/pip name=uWSGI version=2.0.7
 
 - name: Create uwsgi etc directory
   file: path=/etc/uwsgi/vassals owner=root group=root mode=0755 state=directory

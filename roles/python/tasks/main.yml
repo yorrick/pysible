@@ -33,6 +33,4 @@
     creates: "{{ python_dir }}/python{{ python_version }}/bin/pip"
 
 - name: Install virtualenv
-  command: "{{ python_dir }}/python{{ python_version }}/bin/pip install virtualenv==1.11.6"
-  args:
-    creates: "{{ python_dir }}/python{{ python_version }}/lib/python{{ python_major_version }}/site-packages/virtualenv.py"
+  pip: executable={{ python_dir }}/python{{ python_version }}/bin/pip name=virtualenv version=1.11.6
