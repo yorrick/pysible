@@ -9,9 +9,6 @@
 - name: Install nginx uwsgi config file
   copy: src=uwsgi_params dest=/etc/nginx/uwsgi_params owner=root group=root mode=0644
 
-#- name: Create nginx pid directory
-#  file: path=/var/run/nginx owner=webapp group=webapp mode=0764 state=directory
-
 - name: Create nginx log directory
   file: path=/var/log/nginx owner=webapp group=webapp mode=0764 state=directory
 

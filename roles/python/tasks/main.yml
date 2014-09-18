@@ -1,4 +1,12 @@
 ---
+
+- name: Install system packages
+  sudo: yes
+  apt: pkg={{ item.key }} state={{ item.value }}
+  with_dict:
+    make: latest
+    libbz2-dev: latest
+
 - name: Create python directory
   sudo: yes
   file: path={{ python_dir }} owner=root group=root mode=0755 state=directory

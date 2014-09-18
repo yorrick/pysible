@@ -1,11 +1,5 @@
 ---
 
-- name: Create webapp user
-  user: name=webapp comment="webapp user" createhome=yes shell=/bin/bash
-
-- name: Create webapp pid directory
-  file: path=/var/run/uwsgi owner=webapp group=webapp mode=0764 state=directory
-
 - name: Install uwsgi
   command: "{{ python_dir }}/python{{ python_version }}/bin/pip install uWSGI==2.0.7"
   args:
@@ -13,9 +7,6 @@
 
 - name: Create uwsgi etc directory
   file: path=/etc/uwsgi/vassals owner=root group=root mode=0755 state=directory
-
-#- name: Create uwsgi pid directory
-#  file: path=/var/run/uwsgi owner=webapp group=webapp mode=0764 state=directory
 
 - name: Create uwsgi log directory
   file: path=/var/log/uwsgi owner=webapp group=webapp mode=0764 state=directory

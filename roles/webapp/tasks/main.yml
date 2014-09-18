@@ -1,5 +1,8 @@
 ---
 
+- name: Create webapp user
+  user: name=webapp comment="webapp user" createhome=yes shell=/bin/bash
+
 - include: uwsgi.yml
   tags: [uwsgi]
 

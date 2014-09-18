@@ -25,9 +25,16 @@
         tags: [ 'database' ]
       }
 
-
 - hosts: python-dev
   sudo: true
   roles:
     - init
     - python-env
+
+- hosts: build-server
+  sudo: true
+  roles:
+    - init
+    - buildbot
+
+

@@ -1,4 +1,13 @@
 ---
+
+- name: Install System Packages
+  sudo: yes
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - libpq-dev  # this is used by psycopg2
+    - libpcre3
+    - libpcre3-dev
+
 - name: Create app directory
   sudo: yes
   file: path={{ app_dir }} owner=root group=root mode=0755 state=directory

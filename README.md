@@ -7,9 +7,9 @@ Ansible configuration to run multistage python applications
 ## Run it with vagrant
 
 
-### Environements
+### About the environments
 
-You can change the environement that is run in vagrant with VAGRANT_VAGRANTFILE:
+You can change the environment that is run in vagrant with VAGRANT_VAGRANTFILE:
 ```
 export VAGRANT_VAGRANTFILE=vagrant-int
 ```
@@ -37,7 +37,8 @@ vagrant up  # boot the VM
 Note: Since there are no file sharing yet when the box is installed, you still have to add shares in Vagrantfile, and to provision the VM again
 
 
-Rebuild everything
+
+#### Rebuild everything
 
 ```
 vagrant halt && vagrant destroy -f && vagrant up
