@@ -23,8 +23,8 @@
 
 - name: Install nginx default site
   file: src=/etc/nginx/default/default.nginx.conf dest=/etc/nginx/sites-enabled/default.nginx.conf state=link
-#  copy: src=default_web_site.conf dest=/etc/nginx/sites-available/default owner=webapp group=webapp mode=0644
 
 - name: Install nginx upstart configuration file
   template: src=upstart-nginx.conf dest=/etc/init/nginx.conf owner=root group=root mode=0644
-
+  notify:
+    - restart nginx

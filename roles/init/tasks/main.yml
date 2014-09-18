@@ -11,3 +11,4 @@
     - wget
     - python-software-properties
     - acl
+    - htop

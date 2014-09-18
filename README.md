@@ -1,4 +1,4 @@
-pyansible
+pysible
 =========
 
 Ansible configuration to run multistage python applications

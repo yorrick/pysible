@@ -14,4 +14,6 @@
 
 - name: Install uwsgi upstart configuration file
   template: src=upstart-uwsgi_emperor.conf dest=/etc/init/uwsgi_emperor.conf owner=root group=root mode=0644
+  notify:
+    - restart uwsgi_emperor
 

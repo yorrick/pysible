@@ -1,0 +1,3 @@
+---
+- name: restart buildbot master
+  service: name=buildmaster enabled=yes state=restarted

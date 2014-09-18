@@ -37,3 +37,10 @@
 - name: Copy master configuration file
   copy: src=master.cfg dest={{ app_dir }}/buildbot/master.cfg owner=buildbot group=buildbot mode=0644
 
+- name: Install master config
+  template: src=etc.default.buildmaster dest=/etc/default/buildmaster
+
+- name: Install system 5 master init script
+  copy: src=etc.init.d.buildmaster dest=/etc/init.d/buildmaster mode=0755
+  notify:
+    - restart buildbot master
