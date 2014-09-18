@@ -9,7 +9,7 @@
 - name: Initialize slave
   sudo: yes
   sudo_user: buildbot-slave
-  command: "{{ venv_dir }}/buildbot/bin/buildslave create-slave {{ app_dir }}/buildbot-slave localhost:19989 django_async django_async_password"
+  command: "{{ venv_dir }}/buildbot/bin/buildslave create-slave {{ app_dir }}/buildbot-slave localhost:9989 main_slave main_slave_password"
   args:
     creates: "{{ app_dir }}/buildbot-slave/buildbot.tac"
 

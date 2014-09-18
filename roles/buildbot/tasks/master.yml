@@ -6,6 +6,9 @@
 - name: Create buildbot master app dir
   file: path={{ app_dir }}/buildbot owner=buildbot group=buildbot mode=0755 state=directory
 
+- name: Create git poller working dir
+  file: path={{ app_dir }}/buildbot/gitpoller-workdir owner=buildbot group=buildbot mode=0755 state=directory
+
 - name: Initialize master
   sudo: yes
   sudo_user: buildbot
@@ -14,7 +17,7 @@
     creates: "{{ app_dir }}/buildbot/buildbot.tac"
 
 - name: Copy master configuration file
-  copy: src=master.cfg dest={{ app_dir }}/buildbot/master.cfg owner=buildbot group=buildbot mode=0644
+  template: src=master.cfg dest={{ app_dir }}/buildbot/master.cfg owner=buildbot group=buildbot mode=0644
   notify:
     - restart buildbot master
 
