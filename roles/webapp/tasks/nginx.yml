@@ -21,10 +21,13 @@
 - name: Add default site nginx config file
   copy: src=default.nginx.conf dest=/etc/nginx/default/default.nginx.conf owner=webapp group=webapp mode=0644
 
-- name: Install nginx default site
+- name: Remove nginx default site
+  file: dest=/etc/nginx/sites-enabled/default state=absent
+
+- name: Install custom nginx default site
   file: src=/etc/nginx/default/default.nginx.conf dest=/etc/nginx/sites-enabled/default.nginx.conf state=link
 
 - name: Install nginx upstart configuration file
   template: src=upstart-nginx.conf dest=/etc/init/nginx.conf owner=root group=root mode=0644
   notify:
-    - restart nginx
+    - reload nginx

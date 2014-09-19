@@ -1,10 +1,10 @@
 ---
-- name: restart nginx
-  service: name=nginx enabled=yes state=restarted
+- name: reload nginx
+  service: name=nginx enabled=yes state=reloaded
 
 - name: restart uwsgi_emperor
   service: name=uwsgi_emperor enabled=yes state=restarted
 
 # TODO find a way to give a parameter to this
-- name: Reload nginx master
+- name: Reload uwsgi master
   command: touch {{ app_dir }}/{{ item }}/configs/uwsgi.ini

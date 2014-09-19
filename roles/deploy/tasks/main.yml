@@ -33,10 +33,11 @@
   with_items:
     - "{{ deploy_apps }}"
   notify:
-    - restart nginx
+    - reload nginx
 
 - name: Reload uwsgi master
-  command: touch {{ app_dir }}/{{ item.dir }}/uwsgi.ini
+  file: dest={{ app_dir }}/{{ item.dir }}/uwsgi.ini state=touch
+#  command: touch {{ app_dir }}/{{ item.dir }}/uwsgi.ini
   with_items:
     - "{{ deploy_apps }}"
   when: uwsgi_config.changed
