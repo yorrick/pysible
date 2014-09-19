@@ -114,6 +114,20 @@ PYSIBLE_DEPLOY_APPS=django-async.local:django_async:django_async.wsgi_app_prod:d
 ```
 
 
+### PYSIBLE_UNDEPLOY_APPS
+
+You can remove apps from VM with PYSIBLE_UNDEPLOY_APPS.
+You just need to give a comma separated list of dns names.
+```
+export PYSIBLE_UNDEPLOY_APPS=django-async.local,django-async-bis.local
+vagrant provision
+
+or
+
+PYSIBLE_DEPLOY_APPS=django-async.local,django-async-bis.local vagrant provision
+```
+
+
 
 ### Make a database backup
 

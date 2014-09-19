@@ -1,0 +1,95 @@
+---
+
+# TODO we could also write a module to do all steps for one app, and then go on for the second app and so on
+
+#{
+#  "django-async.local": "dns",
+#  "dir": "django_async",
+#  "wsgi_module": "django_async.wsgi_app_prod",
+#  "venv": "django_async_venv",
+#  "settings_module": "django_async.settings_prod",
+#}
+
+- name: Install system packages
+  sudo: yes
+  apt: pkg={{ item.key }} state={{ item.value }}
+  with_dict:
+    gettext: latest
+
+- name: Create app dir
+  file: dest={{ app_dir }}/{{ item.dns }} state=directory
+  with_items:
+    - "{{ deploy_apps }}"
+
+- name: Symlink app clone directory
+  file: src={{ app_clone }}/{{ item.clone_dir }} dest={{ app_dir }}/{{ item.dns }}/clone state=link
+  with_items:
+    - "{{ deploy_apps }}"
+
+- name: Create virtualenvs for apps
+  pip:
+    virtualenv_command: "{{ python_dir }}/python{{ python_version }}/bin/virtualenv"
+    virtualenv_site_packages: no
+    virtualenv: "{{ venv_dir }}/{{ item.venv }}"
+    requirements: "{{ app_dir }}/{{ item.dns }}/clone/{{ python_requirements }}"
+  with_items:
+    - "{{ deploy_apps }}"
+
+# python manage.py collectstatic --clear --noinput: django module miss --clear option
+- name: Collect django static files
+  command: "{{ venv_dir }}/{{ item.venv }}/bin/python manage.py collectstatic --clear --noinput --settings={{ item.settings_module }}"
+  args:
+      chdir: "{{ app_dir }}/{{ item.dns }}/clone/"
+#  django_manage:
+#    command: collectstatic
+#    app_path: "{{ app_dir }}/{{ item.dns }}/clone/"
+#    settings: "{{ item.settings_module }}"
+#    pythonpath: "{{ app_dir }}/{{ item.dns }}/clone"
+#    virtualenv: "{{ venv_dir }}/{{ item.venv }}"
+  with_items:
+    - "{{ deploy_apps }}"
+
+# python manage.py compilemessages: django module miss compilemessages command
+- name: Compile django messages
+  command: "{{ venv_dir }}/{{ item.venv }}/bin/python manage.py compilemessages --settings={{ item.settings_module }}"
+  args:
+    chdir: "{{ app_dir }}/{{ item.dns }}/clone/"
+  with_items:
+    - "{{ deploy_apps }}"
+
+- name: Create uwsgi config file
+  template: src=uwsgi.ini dest={{ app_dir }}/{{ item.dns }}/uwsgi.ini
+  register: uwsgi_config
+  with_items:
+    - "{{ deploy_apps }}"
+
+- name: Create nginx config file
+  template: src=nginx.conf dest={{ app_dir }}/{{ item.dns }}/nginx.conf
+  with_items:
+    - "{{ deploy_apps }}"
+
+- name: Symlink uwsgi config file
+  file: src={{ app_dir }}/{{ item.dns }}/uwsgi.ini dest=/etc/uwsgi/vassals/{{ item.dns }}.uwsgi.ini state=link
+  with_items:
+    - "{{ deploy_apps }}"
+
+- name: Symlink nginx config file
+  file: src={{ app_dir }}/{{ item.dns }}/nginx.conf dest=/etc/nginx/sites-enabled/{{ item.dns }}.nginx.conf state=link
+  with_items:
+    - "{{ deploy_apps }}"
+#  notify:
+#    - reload nginx
+
+- name: Reload uwsgi master
+  file: dest={{ app_dir }}/{{ item.dns }}/uwsgi.ini state=touch
+  with_items:
+    - "{{ deploy_apps }}"
+#  when: uwsgi_config.changed
+
+- name: Reload nginx
+  service: name=nginx enabled=yes state=reloaded
+
+- name: Test that root url returns a redirect
+  shell: "test $(wget --header='Host: django-async.local' --max-redirect 0 --server-response localhost 2>&1 | awk '/^  HTTP/{print $2}') -eq 302"
+  with_items:
+    - "{{ deploy_apps }}"

@@ -1,0 +1,27 @@
+---
+
+# TODO we could also write a module to do all steps for one app, and then go on for the second app and so on
+# undeploy_apps is just a list of dns names
+
+- name: Remove symlink to app clone directory
+  file: dest={{ app_dir }}/{{ item }}/clone state=absent
+  with_items:
+    - "{{ undeploy_apps }}"
+
+- name: Renove symlink to uwsgi config file
+  file: dest=/etc/uwsgi/vassals/{{ item }}.uwsgi.ini state=absent
+  with_items:
+    - "{{ undeploy_apps }}"
+
+- name: Remove symlink to nginx config file
+  file: dest=/etc/nginx/sites-enabled/{{ item }}.nginx.conf state=absent
+  with_items:
+    - "{{ undeploy_apps }}"
+
+- name: Reload uwsgi master
+  file: dest={{ app_dir }}/{{ item }}/uwsgi.ini state=touch
+  with_items:
+    - "{{ undeploy_apps }}"
+
+- name: Reload nginx
+  service: name=nginx enabled=yes state=reloaded

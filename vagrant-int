@@ -30,6 +30,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         end
 
         deploy_apps = get_deploy_apps()
+        undeploy_apps = get_undeploy_apps()
 
         # set name of VM
         int.vm.provider "virtualbox" do |v|
@@ -40,12 +41,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             ansible.playbook = "provision.yml"
             ansible.inventory_path = "inventories/integration_servers"
             ansible.limit = 'all'
-            ansible.verbose = 'v'
+            # ansible.verbose = 'v'
 
-            if !deploy_apps.nil?
-                # if there is an app to deploy, only deploy tasks will be executed
-                ansible.tags = ["deploy-config"]
-                ansible.extra_vars = {deploy_apps: deploy_apps}
+            if !deploy_apps.nil? or !undeploy_apps.nil?
+                # if there is an app to deploy use deploy playbook
+                ansible.playbook = "deploy.yml"
+                ansible.extra_vars = {
+                    deploy_apps: deploy_apps,
+                    undeploy_apps: undeploy_apps
+                }
             end
         end
 

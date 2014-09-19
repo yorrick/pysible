@@ -23,6 +23,17 @@ def get_deploy_apps()
 end
 
 
+# Those apps will be undeployed from uwsgi / nginx
+def get_undeploy_apps()
+    # PYSIBLE_UNDEPLOY_APPS=django-async.local:django_async:django_async.wsgi_app_prod:django_async_venv,...
+    if ENV.has_key?('PYSIBLE_UNDEPLOY_APPS')
+        return ENV['PYSIBLE_UNDEPLOY_APPS'].split(',')
+    else
+        return nil
+    end
+end
+
+
 def unpack_app_params(params)
     dns, clone_dir, wsgi_module, venv, settings_module = params.split(":")
     return {
