@@ -29,6 +29,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             int.vm.synced_folder host_app_path, "/srv/app-clones/#{app_name}", :mount_options => ['dmode=755', 'fmode=666']
         end
 
+        deploy_apps = get_deploy_apps()
 
         # set name of VM
         int.vm.provider "virtualbox" do |v|
@@ -41,15 +42,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             ansible.limit = 'all'
             ansible.verbose = 'v'
 
-            deploy_apps = get_deploy_apps()
             if !deploy_apps.nil?
                 # if there is an app to deploy, only deploy tasks will be executed
-                ansible.tags = ["deploy"]
+                ansible.tags = ["deploy-config"]
                 ansible.extra_vars = {deploy_apps: deploy_apps}
             end
         end
 
         # int.vm.hostname = "www.testing.de"
-        int.hostsupdater.aliases = ["int.django-async.local"]
+        # int.hostsupdater.aliases = ["int.django-async.local"]
+
+        aliases = ["buildbot.local"]
+
+        if !deploy_apps.nil?
+            aliases.concat(deploy_apps.map { |app| app["dns"] })
+        end
+
+        int.hostsupdater.aliases = aliases
+
     end
 end

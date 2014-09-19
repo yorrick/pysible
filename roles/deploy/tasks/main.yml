@@ -42,11 +42,15 @@
   file: src={{ app_dir }}/{{ item.dns }}/nginx.conf dest=/etc/nginx/sites-enabled/{{ item.dns }}.nginx.conf state=link
   with_items:
     - "{{ deploy_apps }}"
-  notify:
-    - reload nginx
+#  notify:
+#    - reload nginx
 
 - name: Reload uwsgi master
   file: dest={{ app_dir }}/{{ item.dns }}/uwsgi.ini state=touch
   with_items:
     - "{{ deploy_apps }}"
-  when: uwsgi_config.changed
+#  when: uwsgi_config.changed
+
+- name: Reload nginx
+  service: name=nginx enabled=yes state=reloaded
+  

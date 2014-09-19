@@ -3,7 +3,7 @@
   roles:
     - init
     - webapp
-    - { role: deploy, tags: [ 'deploy' ] }
+    - { role: deploy, tags: [ 'deploy-config' ] }
 
 - hosts: database
   sudo: true
