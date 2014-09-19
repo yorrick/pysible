@@ -2,5 +2,9 @@
 - name: restart nginx
   service: name=nginx enabled=yes state=restarted
 
-- name: restart uwsgi_emperor  # TODO we can also just touch files to restart apps individually
+- name: restart uwsgi_emperor
   service: name=uwsgi_emperor enabled=yes state=restarted
+
+# TODO find a way to give a parameter to this
+- name: Reload nginx master
+  command: touch {{ app_dir }}/{{ item }}/configs/uwsgi.ini

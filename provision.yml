@@ -29,7 +29,7 @@
   sudo: true
   roles:
     - init
-    - python-env
+    - python-dev
 
 - hosts: build-server
   sudo: true

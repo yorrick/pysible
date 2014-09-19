@@ -1,15 +1,42 @@
 ---
 
-- name: Symlink uwsgi config file
-  file: src={{ app_dir }}/{{ item }}/configs/uwsgi.ini dest=/etc/uwsgi/vassals/{{ item }}.uwsgi.ini state=link
+# TODO we could also write a module to do all steps for one app, and then go on for the second app and so on
+#{"django-async.local":"dns","dir":"django_async","wsgi_module":"django_async.wsgi_app_prod","venv":"django_async_venv"}
+
+- name: Create virtualenvs for apps
+  pip:
+    virtualenv_command: "{{ python_dir }}/python{{ python_version }}/bin/virtualenv"
+    virtualenv_site_packages: no
+    virtualenv: "{{ venv_dir }}/{{ item.venv }}"
+    requirements: "{{ app_dir }}/{{ item.dir }}/{{ python_requirements }}"
   with_items:
-    - "{{ app_names }}"
-  notify:
-    - restart uwsgi_emperor
+    - "{{ deploy_apps }}"
+
+- name: Create uwsgi config file
+  template: src=uwsgi.ini dest={{ app_dir }}/{{ item.dir }}/uwsgi.ini
+  register: uwsgi_config
+  with_items:
+    - "{{ deploy_apps }}"
+
+- name: Create nginx config file
+  template: src=nginx.conf dest={{ app_dir }}/{{ item.dir }}/nginx.conf
+  with_items:
+    - "{{ deploy_apps }}"
+
+- name: Symlink uwsgi config file
+  file: src={{ app_dir }}/{{ item.dir }}/uwsgi.ini dest=/etc/uwsgi/vassals/{{ item.dir }}.uwsgi.ini state=link
+  with_items:
+    - "{{ deploy_apps }}"
 
 - name: Symlink nginx config file
-  file: src={{ app_dir }}/{{ item }}/configs/nginx.conf dest=/etc/nginx/sites-enabled/{{ item }}.nginx.conf state=link
+  file: src={{ app_dir }}/{{ item.dir }}/nginx.conf dest=/etc/nginx/sites-enabled/{{ item.dir }}.nginx.conf state=link
   with_items:
-    - "{{ app_names }}"
+    - "{{ deploy_apps }}"
   notify:
     - restart nginx
+
+- name: Reload uwsgi master
+  command: touch {{ app_dir }}/{{ item.dir }}/uwsgi.ini
+  with_items:
+    - "{{ deploy_apps }}"
+  when: uwsgi_config.changed

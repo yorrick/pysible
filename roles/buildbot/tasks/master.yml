@@ -17,7 +17,13 @@
     creates: "{{ app_dir }}/buildbot/buildbot.tac"
 
 - name: Copy master configuration file
-  template: src=master.cfg dest={{ app_dir }}/buildbot/master.cfg owner=buildbot group=buildbot mode=0644
+  template:
+    src: master.cfg
+    dest: "{{ app_dir }}/buildbot/master.cfg"
+    owner: buildbot
+    group: buildbot
+    mode: 0644
+    validate: "{{ venv_dir }}/buildbot/bin/buildbot checkconfig %s"
   notify:
     - restart buildbot master
 

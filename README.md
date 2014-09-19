@@ -14,11 +14,6 @@ You can change the environment that is run in vagrant with VAGRANT_VAGRANTFILE:
 export VAGRANT_VAGRANTFILE=vagrant-int
 ```
 
-You can control which apps are run on a VM by using PYANSIBLE_APPS
-```
-export PYANSIBLE_APPS=/Users/yorrick/work/django_async
-```
-
 
 #### Package a pre built vagrant box
 ```
@@ -61,6 +56,15 @@ vagrant halt && vagrant destroy -f && vagrant up
 4. You have to install ansible on your dev machine, which is not blazing fast on windows hosts (or we could just distribute prebuilt vagrant images)
 
 
+### PYSIBLE_DEV_APPS
+
+You can control which apps are run on the dev VM by using PYSIBLE_DEV_APPS.
+Each app will have its own virtualenv, whose dependencies will be built using requirements-dev.txt file.
+```
+export PYSIBLE_DEV_APPS=/Users/yorrick/work/django_async
+```
+
+
 ### Restore database
 
 Using vagrant user
@@ -93,6 +97,18 @@ NB: to use an editor that uses the project's virtualenv, see if your editor supp
 
 
 ## Integration
+
+
+### PYSIBLE_DEPLOY_APPS
+
+You can control which apps are going to be deployed on the VM using PYSIBLE_DEPLOY_APPS.
+Each app will be deployed on VM using uwsgi and nginx.
+The format is DNS:app_directory:wsgi_module:virtual_env
+```
+export PYSIBLE_DEPLOY_APPS=django-async.local:django_async:django_async.wsgi_app_prod:django_async_venv
+```
+
+
 
 ### Make a database backup
 

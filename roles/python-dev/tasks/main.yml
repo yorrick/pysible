@@ -1,0 +1,10 @@
+---
+
+- name: Create virtualenvs for apps
+  pip:
+    virtualenv_command: "{{ python_dir }}/python{{ python_version }}/bin/virtualenv"
+    virtualenv_site_packages: no
+    virtualenv: "{{ venv_dir }}/{{ item }}"
+    requirements: "{{ app_dir }}/{{ item }}/{{ python_requirements }}"
+  with_items:
+    - "{{ dev_apps }}"

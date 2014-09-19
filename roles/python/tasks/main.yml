@@ -6,6 +6,9 @@
   with_dict:
     make: latest
     libbz2-dev: latest
+    libpq-dev: latest  # this is used by psycopg2
+    libpcre3: latest
+    libpcre3-dev: latest
 
 - name: Create python directory
   sudo: yes
@@ -34,3 +37,11 @@
 
 - name: Install virtualenv
   pip: executable={{ python_dir }}/python{{ python_version }}/bin/pip name=virtualenv version=1.11.6
+
+- name: Create app directory
+  sudo: yes
+  file: path={{ app_dir }} owner=root group=root mode=0755 state=directory
+
+- name: Create app virtualenv directory
+  sudo: yes
+  file: path={{ venv_dir }} owner=root group=root mode=0755 state=directory

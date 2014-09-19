@@ -22,7 +22,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         dev.vm.network :private_network, ip: "192.168.56.121"
         # dev.ssh.forward_agent = true
 
-        apps = get_host_apps()
+        apps = get_dev_apps()
         apps.each do |app_name, host_app_path|
           # dev.vm.synced_folder host_app_path, "/srv/app/#{app_name}", :owner=> 'webapp', :group=>'webapp', :mount_options => ['dmode=755', 'fmode=666']
           dev.vm.synced_folder host_app_path, "/srv/app/#{app_name}", :mount_options => ['dmode=755', 'fmode=666']
@@ -37,8 +37,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             ansible.playbook = "provision.yml"
             ansible.inventory_path = "inventories/dev_servers"
             ansible.limit = 'all'
-            ansible.verbose = 'vv'
-            ansible.extra_vars = {app_names: apps.keys}
+            ansible.verbose = 'v'
         end
 
         # dev.vm.hostname = "www.testing.de"

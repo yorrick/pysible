@@ -23,11 +23,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         int.vm.network :private_network, ip: "192.168.56.121"
         # int.ssh.forward_agent = true
 
-        apps = get_host_apps()
+        # we still mount apps from hosts
+        apps = get_dev_apps()
         apps.each do |app_name, host_app_path|
-            # int.vm.synced_folder host_app_path, "/srv/app/#{app_name}", :owner=> 'webapp', :group=>'webapp', :mount_options => ['dmode=755', 'fmode=666']
             int.vm.synced_folder host_app_path, "/srv/app/#{app_name}", :mount_options => ['dmode=755', 'fmode=666']
         end
+
 
         # set name of VM
         int.vm.provider "virtualbox" do |v|
@@ -38,9 +39,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             ansible.playbook = "provision.yml"
             ansible.inventory_path = "inventories/integration_servers"
             ansible.limit = 'all'
-            ansible.verbose = 'vv'
-            ansible.extra_vars = {app_names: apps.keys}
-            #ansible.skip_tags =
+            ansible.verbose = 'v'
+
+            deploy_apps = get_deploy_apps()
+            if !deploy_apps.nil?
+                # if there is an app to deploy, only deploy tasks will be executed
+                ansible.tags = ["deploy"]
+                ansible.extra_vars = {deploy_apps: deploy_apps}
+            end
         end
 
         # int.vm.hostname = "www.testing.de"
