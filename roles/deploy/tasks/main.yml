@@ -37,7 +37,6 @@
 
 - name: Reload uwsgi master
   file: dest={{ app_dir }}/{{ item.dir }}/uwsgi.ini state=touch
-#  command: touch {{ app_dir }}/{{ item.dir }}/uwsgi.ini
   with_items:
     - "{{ deploy_apps }}"
   when: uwsgi_config.changed
