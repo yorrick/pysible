@@ -124,7 +124,7 @@ vagrant provision
 
 or
 
-PYSIBLE_DEPLOY_APPS=django-async.local,django-async-bis.local vagrant provision
+PYSIBLE_UNDEPLOY_APPS=django-async.local,django-async-bis.local vagrant provision
 ```
 
 

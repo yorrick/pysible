@@ -41,15 +41,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             ansible.playbook = "provision.yml"
             ansible.inventory_path = "inventories/integration_servers"
             ansible.limit = 'all'
-            # ansible.verbose = 'v'
+            ansible.verbose = 'vv'
 
-            if !deploy_apps.nil? or !undeploy_apps.nil?
+            if !deploy_apps.nil?
                 # if there is an app to deploy use deploy playbook
                 ansible.playbook = "deploy.yml"
-                ansible.extra_vars = {
-                    deploy_apps: deploy_apps,
-                    undeploy_apps: undeploy_apps
-                }
+                ansible.extra_vars = {deploy_apps: deploy_apps}
+            end
+
+            if !undeploy_apps.nil?
+                # if there is an app to deploy use deploy playbook
+                ansible.playbook = "deploy.yml"
+                ansible.extra_vars = {undeploy_apps: undeploy_apps}
             end
         end
 

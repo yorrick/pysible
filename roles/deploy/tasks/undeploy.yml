@@ -25,3 +25,8 @@
 
 - name: Reload nginx
   service: name=nginx enabled=yes state=reloaded
+
+- name: Test that root url returns default site
+  shell: "wget --header='Host: django-async-bis.local' -q -O - localhost | grep -q 'OK!'"
+  with_items:
+    - "{{ undeploy_apps }}"
