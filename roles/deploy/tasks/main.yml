@@ -88,3 +88,6 @@
 
 - name: Reload nginx
   service: name=nginx enabled=yes state=reloaded
+
+
+# ADD A TEST WITH WGET ON ROOT URL?
