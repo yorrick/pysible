@@ -61,7 +61,7 @@ vagrant halt && vagrant destroy -f && vagrant up
 You can control which apps are run on the dev VM by using PYSIBLE_DEV_APPS.
 Each app will have its own virtualenv, whose dependencies will be built using requirements-dev.txt file.
 ```
-export PYSIBLE_DEV_APPS=/Users/yorrick/work/django_async
+export PYSIBLE_CLONE_APPS=/Users/yorrick/work/django_async
 ```
 
 
@@ -75,14 +75,14 @@ sudo su postgres -c 'psql -f /vagrant/dbdump postgres'
 
 ### Run django devserver
 
-1. App is located at /srv/app/<app> directory
+1. App is located at /srv/app-clones/<app> directory
 2. Virtualenv for app is located at /srv/virtualenv/<app>
 3. Run devserver on 0.0.0.0:8000 so it is accessible on host machine (not only in local)
 4. You have to use the development settings
 
 ```
 vagrant ssh
-cd /srv/app/django_async/
+cd /srv/app-clones/django_async/
 source /srv/virtualenv/django_async/bin/activate
 python manage.py runserver 0.0.0.0:8000 --settings=django_async.settings_dev
 ```
@@ -103,7 +103,7 @@ NB: to use an editor that uses the project's virtualenv, see if your editor supp
 
 You can control which apps are going to be deployed on the VM using PYSIBLE_DEPLOY_APPS.
 Each app will be deployed on VM using uwsgi and nginx.
-The format is DNS:app_directory:wsgi_module:virtual_env
+The format is DNS:app_clone:wsgi_module:virtual_env
 ```
 export PYSIBLE_DEPLOY_APPS=django-async.local:django_async:django_async.wsgi_app_prod:django_async_venv
 ```

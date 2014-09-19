@@ -24,9 +24,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # int.ssh.forward_agent = true
 
         # we still mount apps from hosts
-        apps = get_dev_apps()
+        apps = get_clone_apps()
         apps.each do |app_name, host_app_path|
-            int.vm.synced_folder host_app_path, "/srv/app/#{app_name}", :mount_options => ['dmode=755', 'fmode=666']
+            int.vm.synced_folder host_app_path, "/srv/app-clones/#{app_name}", :mount_options => ['dmode=755', 'fmode=666']
         end
 
 

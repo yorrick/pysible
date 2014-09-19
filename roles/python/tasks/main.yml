@@ -42,6 +42,10 @@
   sudo: yes
   file: path={{ app_dir }} owner=root group=root mode=0755 state=directory
 
+- name: Create app clone directory
+  sudo: yes
+  file: path={{ app_clone }} owner=root group=root mode=0755 state=directory
+
 - name: Create app virtualenv directory
   sudo: yes
   file: path={{ venv_dir }} owner=root group=root mode=0755 state=directory

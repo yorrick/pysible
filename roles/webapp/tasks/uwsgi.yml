@@ -7,7 +7,7 @@
   file: path=/etc/uwsgi/vassals owner=root group=root mode=0755 state=directory
 
 - name: Create uwsgi log directory
-  file: path=/var/log/uwsgi owner=webapp group=webapp mode=0764 state=directory
+  file: path=/var/log/uwsgi owner=webapp group=webapp mode=0765 state=directory
 
 - name: Installs uwsgi emperor configuration file
   template: src=uwsgi_emperor.ini dest=/etc/uwsgi/uwsgi_emperor.ini owner=root group=root mode=0644

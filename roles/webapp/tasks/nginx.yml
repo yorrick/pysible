@@ -10,10 +10,10 @@
   copy: src=uwsgi_params dest=/etc/nginx/uwsgi_params owner=root group=root mode=0644
 
 - name: Create nginx log directory
-  file: path=/var/log/nginx owner=webapp group=webapp mode=0764 state=directory
+  file: path=/var/log/nginx owner=webapp group=webapp mode=0765 state=directory
 
 - name: Create nginx default site directory
-  file: path=/etc/nginx/default owner=webapp group=webapp mode=0764 state=directory
+  file: path=/etc/nginx/default owner=webapp group=webapp mode=0765 state=directory
 
 - name: Add default site index.html file
   copy: src=index.html dest=/etc/nginx/default/index.html owner=webapp group=webapp mode=0644
@@ -31,3 +31,4 @@
   template: src=upstart-nginx.conf dest=/etc/init/nginx.conf owner=root group=root mode=0644
   notify:
     - reload nginx
+

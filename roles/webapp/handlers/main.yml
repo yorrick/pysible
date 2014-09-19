@@ -6,5 +6,5 @@
   service: name=uwsgi_emperor enabled=yes state=restarted
 
 # TODO find a way to give a parameter to this
-- name: Reload uwsgi master
-  command: touch {{ app_dir }}/{{ item }}/configs/uwsgi.ini
+#- name: Reload uwsgi master
+#  command: touch {{ app_dir }}/.../uwsgi.ini

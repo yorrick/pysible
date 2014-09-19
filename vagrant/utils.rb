@@ -1,9 +1,9 @@
 # Those apps will be mounted in VM
 # returns a Hash(app_name, host_app_path)
-def get_dev_apps()
-    # PYSIBLE_DEV_APPS=/Users/yorrick/work/django_async
-    if ENV.has_key?('PYSIBLE_DEV_APPS')
-        apps = ENV['PYSIBLE_DEV_APPS'].split(',').to_set
+def get_clone_apps()
+    # PYSIBLE_CLONE_APPS=/Users/yorrick/work/django_async
+    if ENV.has_key?('PYSIBLE_CLONE_APPS')
+        apps = ENV['PYSIBLE_CLONE_APPS'].split(',').to_set
         return Hash[apps.map { |host_app_path| [host_app_path.split("/").last, host_app_path] }]
     else
         return {}
@@ -24,6 +24,6 @@ end
 
 
 def unpack_app_params(params)
-    dns, dir, wsgi_module, venv = params.split(":")
-    return {'dns' => dns, 'dir' => dir, 'wsgi_module' => wsgi_module, 'venv' => venv}
+    dns, clone_dir, wsgi_module, venv = params.split(":")
+    return {'dns' => dns, 'clone_dir' => clone_dir, 'wsgi_module' => wsgi_module, 'venv' => venv}
 end

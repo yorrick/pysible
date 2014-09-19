@@ -22,10 +22,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         dev.vm.network :private_network, ip: "192.168.56.121"
         # dev.ssh.forward_agent = true
 
-        apps = get_dev_apps()
+        apps = get_clone_apps()
         apps.each do |app_name, host_app_path|
-          # dev.vm.synced_folder host_app_path, "/srv/app/#{app_name}", :owner=> 'webapp', :group=>'webapp', :mount_options => ['dmode=755', 'fmode=666']
-          dev.vm.synced_folder host_app_path, "/srv/app/#{app_name}", :mount_options => ['dmode=755', 'fmode=666']
+          # dev.vm.synced_folder host_app_path, "/srv/app-clones#{app_name}", :owner=> 'webapp', :group=>'webapp', :mount_options => ['dmode=755', 'fmode=666']
+          dev.vm.synced_folder host_app_path, "/srv/app-clones#{app_name}", :mount_options => ['dmode=755', 'fmode=666']
         end
 
         # set name of VM
