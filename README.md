@@ -103,9 +103,14 @@ NB: to use an editor that uses the project's virtualenv, see if your editor supp
 
 You can control which apps are going to be deployed on the VM using PYSIBLE_DEPLOY_APPS.
 Each app will be deployed on VM using uwsgi and nginx.
-The format is DNS:app_clone:wsgi_module:virtual_env
+The format is DNS:app_clone:wsgi_module:virtual_env:settings_module
 ```
-export PYSIBLE_DEPLOY_APPS=django-async.local:django_async:django_async.wsgi_app_prod:django_async_venv
+export PYSIBLE_DEPLOY_APPS=django-async.local:django_async:django_async.wsgi_app_prod:django_async_venv:django_async.settings_prod
+vagrant provision
+
+or
+
+PYSIBLE_DEPLOY_APPS=django-async.local:django_async:django_async.wsgi_app_prod:django_async_venv,django-async-bis.local:django_async:django_async.wsgi_app_prod:django_async_venv:django_async.settings_prod vagrant provision
 ```
 
 

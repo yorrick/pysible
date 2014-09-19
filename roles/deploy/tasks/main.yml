@@ -1,7 +1,20 @@
 ---
 
 # TODO we could also write a module to do all steps for one app, and then go on for the second app and so on
-#{"django-async.local":"dns","dir":"django_async","wsgi_module":"django_async.wsgi_app_prod","venv":"django_async_venv"}
+
+#{
+#  "django-async.local": "dns",
+#  "dir": "django_async",
+#  "wsgi_module": "django_async.wsgi_app_prod",
+#  "venv": "django_async_venv",
+#  "settings_module": "django_async.settings_prod",
+#}
+
+- name: Install system packages
+  sudo: yes
+  apt: pkg={{ item.key }} state={{ item.value }}
+  with_dict:
+    gettext: latest
 
 - name: Create app dir
   file: dest={{ app_dir }}/{{ item.dns }} state=directory
@@ -19,6 +32,28 @@
     virtualenv_site_packages: no
     virtualenv: "{{ venv_dir }}/{{ item.venv }}"
     requirements: "{{ app_dir }}/{{ item.dns }}/clone/{{ python_requirements }}"
+  with_items:
+    - "{{ deploy_apps }}"
+
+# python manage.py collectstatic --clear --noinput: django module miss --clear option
+- name: Collect django static files
+  command: "{{ venv_dir }}/{{ item.venv }}/bin/python manage.py collectstatic --clear --noinput --settings={{ item.settings_module }}"
+  args:
+      chdir: "{{ app_dir }}/{{ item.dns }}/clone/"
+#  django_manage:
+#    command: collectstatic
+#    app_path: "{{ app_dir }}/{{ item.dns }}/clone/"
+#    settings: "{{ item.settings_module }}"
+#    pythonpath: "{{ app_dir }}/{{ item.dns }}/clone"
+#    virtualenv: "{{ venv_dir }}/{{ item.venv }}"
+  with_items:
+    - "{{ deploy_apps }}"
+
+# python manage.py compilemessages: django module miss compilemessages command
+- name: Compile django messages
+  command: "{{ venv_dir }}/{{ item.venv }}/bin/python manage.py compilemessages --settings={{ item.settings_module }}"
+  args:
+    chdir: "{{ app_dir }}/{{ item.dns }}/clone/"
   with_items:
     - "{{ deploy_apps }}"
 
@@ -53,4 +88,3 @@
 
 - name: Reload nginx
   service: name=nginx enabled=yes state=reloaded
-  
