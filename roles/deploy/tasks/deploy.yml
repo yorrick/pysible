@@ -13,7 +13,7 @@
 - name: Create deployer user
   user: name=deployer comment="deployer user" createhome=yes shell=/bin/bash
 
-# TODO make it run once
+# TODO make it run once: see https://github.com/bfmartin/ansible-sshknownhosts
 - name: Add github ssh public key
   shell: ssh-keyscan -H github.com >> /etc/ssh/ssh_known_hosts
   sudo: yes
