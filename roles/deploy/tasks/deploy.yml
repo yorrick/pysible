@@ -22,8 +22,7 @@
 # TODO setup a key for user deployer, and see if permissions are ok (maybe check with ACLs)
 # then we'll be able to use ssh with deployer user
 - name: Setup bare repo
-# TODO find the repo name
-  git: repo={{ item.github_url }} bare=yes dest={{ app_clone }}/django_async.git force=yes
+  git: repo={{ item.github_url }} bare=yes dest={{ app_clone }}/{{ item.github_url | basename }} force=yes
   sudo: yes
 #  sudo_user: deployer
   with_items:
@@ -35,9 +34,8 @@
     - "{{ deploy_apps }}"
 
 # then setup a repo in {{ app_dir }}/{{ item.dns }}/clone that uses the bare repo as origin
-# TODO find the repo name
 - name: Clone app repo
-  git: repo=file://{{ app_clone }}/django_async.git version=master dest={{ app_dir }}/{{ item.dns }}/clone
+  git: repo=file://{{ app_clone }}/{{ item.github_url | basename }} version=master dest={{ app_dir }}/{{ item.dns }}/clone
   with_items:
     - "{{ deploy_apps }}"
 
