@@ -35,10 +35,10 @@ end
 
 
 def unpack_app_params(params)
-    dns, clone_dir, wsgi_module, venv, settings_module = params.split(":")
+    dns, github_url, wsgi_module, venv, settings_module = params.split("#")
     return {
         'dns' => dns,
-        'clone_dir' => clone_dir,
+        'github_url' => github_url,
         'wsgi_module' => wsgi_module,
         'venv' => venv,
         'settings_module' => settings_module,

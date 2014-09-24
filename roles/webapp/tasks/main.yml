@@ -1,5 +1,11 @@
 ---
 
+- name: Install system packages
+  sudo: yes
+  apt: pkg={{ item.key }} state={{ item.value }}
+  with_dict:
+    gettext: latest
+
 - name: Create webapp user
   user: name=webapp comment="webapp user" createhome=yes shell=/bin/bash
 
